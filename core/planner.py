@@ -87,11 +87,40 @@ RULES:
             try:
                 roadmap = json.loads(content)
             except json.JSONDecodeError as e:
-                return {"type": "error", "message": f"Invalid JSON generated: {e}\nRaw Output: {content}"}
+                # Fallback: Extract everything between first [ and last ] or first { and last }
+                import re
+                list_match = re.search(r'\[.*\]', content, re.DOTALL)
+                dict_match = re.search(r'\{.*\}', content, re.DOTALL)
+                
+                parsed = False
+                if list_match:
+                    try:
+                        roadmap = json.loads(list_match.group(0))
+                        parsed = True
+                    except:
+                        pass
+                if not parsed and dict_match:
+                    try:
+                        roadmap = json.loads(dict_match.group(0))
+                        parsed = True
+                    except:
+                        pass
+                
+                if not parsed:
+                    return {"type": "error", "message": f"Invalid JSON generated: {e}\nRaw Output: {content}"}
             
-            # --- Structural Validation ---
+            # --- Structural Validation & Forgiveness ---
+            if isinstance(roadmap, dict):
+                for key in ["steps", "roadmap", "plan", "actions"]:
+                    if key in roadmap and isinstance(roadmap[key], list):
+                        roadmap = roadmap[key]
+                        break
+                else:
+                    if "tool_name" in roadmap:
+                        roadmap = [roadmap]
+                        
             if not isinstance(roadmap, list):
-                return {"type": "error", "message": "Roadmap is not a list"}
+                return {"type": "error", "message": f"Roadmap is not a list. Got: {type(roadmap).__name__}"}
                 
             for i, step in enumerate(roadmap):
                 if not isinstance(step, dict):

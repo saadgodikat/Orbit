@@ -224,7 +224,7 @@ tool_api_caller → saves {{api_response}} → tool_data_converter reads it
 ```
 
 ### Planner
-Uses the Gemma LLM to decompose goals. The LLM sees all available tool descriptions and generates a JSON roadmap:
+Uses the Gemma LLM to decompose goals. The LLM sees all available tool descriptions and generates a JSON roadmap. Includes robust fallback parsing that gracefully processes single steps, roadmap objects (e.g., `{"steps": [...]}`), and handles LLM markdown formatting gracefully.
 ```json
 [
   {"step": 1, "tool": "tool_api_caller", "args": {"url": "..."}, "description": "Fetch data"},
@@ -234,7 +234,9 @@ Uses the Gemma LLM to decompose goals. The LLM sees all available tool descripti
 ```
 
 ### Human-in-the-Loop
-Every step is displayed before execution. The orchestrator supports auto-approval mode for trusted pipelines.
+Every step is displayed before execution. The orchestrator supports auto-approval mode for trusted pipelines. 
+
+**Abort Execution**: At any step approval prompt (`[ APPROVE ]`), you can type **`abort`** or **`cancel`** to completely halt the current operation and safely return back to the main goal prompt section.
 
 ---
 

@@ -122,6 +122,7 @@ def main():
                 else:
                     print(f"\n\033[1;38;5;114m[ ROADMAP GENERATED ]\033[0m {len(roadmap)} steps planned.")
                     tool_outputs = []
+                    aborted = False
                     
                     for i, step in enumerate(roadmap):
                         print("\033[38;5;238m" + "─"*58 + "\033[0m")
@@ -150,8 +151,14 @@ def main():
                             break
 
                         approval = ""
-                        while approval not in ["y", "n", "yes", "no"]:
-                            approval = input("\n\033[1;38;5;214m[ APPROVE ]\033[0m Execute this step? [y/n]: ").strip().lower()
+                        while approval not in ["y", "n", "yes", "no", "abort", "cancel"]:
+                            approval = input("\n\033[1;38;5;214m[ APPROVE ]\033[0m Execute this step? [y/n] (or type 'abort'): ").strip().lower()
+
+                        if approval in ["abort", "cancel"]:
+                            print("\033[38;5;214m  Execution aborted by user.\033[0m")
+                            tool_outputs.append(f"Step {i+1} ({tool_name}): Aborted by user.")
+                            aborted = True
+                            break
 
                         if approval in ["n", "no"]:
                             print("\033[38;5;240m  Skipped by user.\033[0m")
@@ -182,7 +189,10 @@ def main():
                     save_history()
 
                     print("\033[38;5;238m" + "─"*58 + "\033[0m")
-                    print("\033[1;38;5;39m[ PIPELINE COMPLETE ]\033[0m Ready for next request.\n")
+                    if aborted:
+                        print("\033[1;38;5;196m[ PIPELINE ABORTED ]\033[0m Returning to prompt.\n")
+                    else:
+                        print("\033[1;38;5;39m[ PIPELINE COMPLETE ]\033[0m Ready for next request.\n")
 
             # --- AI Chat Naming (Runs once at the end of the first iteration) ---
             if not chat_title_generated and len(chat_history) >= 2:
@@ -212,6 +222,12 @@ def main():
         except KeyboardInterrupt:
             print("\n\033[38;5;244mExiting ORBIT...\033[0m")
             sys.exit(0)
+        except EOFError:
+            print("\n\033[38;5;244mInput stream closed. Exiting ORBIT...\033[0m")
+            sys.exit(0)
+        except Exception as e:
+            print(f"\n\033[1;38;5;196m[ FATAL ERROR ]\033[0m {e}")
+            print("\033[38;5;244mAttempting to resume session...\033[0m\n")
 
 if __name__ == "__main__":
     main()

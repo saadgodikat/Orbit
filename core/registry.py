@@ -46,7 +46,21 @@ class ToolRegistry:
         """Get a formatted string of all tools and their descriptions for the LLM."""
         desc = []
         for name, tool_cls in self.tools.items():
-            desc.append(tool_cls.get_description())
+            info = tool_cls.get_description()
+            if isinstance(info, dict):
+                tool_str = f"Tool: {info.get('name', name)}\n"
+                tool_str += f"Description: {info.get('description', '')}\n"
+                params = info.get('parameters', {})
+                if params:
+                    tool_str += "Parameters:\n"
+                    if isinstance(params, dict):
+                        for p_name, p_desc in params.items():
+                            tool_str += f"  - {p_name}: {p_desc}\n"
+                    else:
+                        tool_str += f"  {params}\n"
+                desc.append(tool_str)
+            else:
+                desc.append(str(info))
         return "\n\n".join(desc)
 
     def has_tool(self, name: str) -> bool:
