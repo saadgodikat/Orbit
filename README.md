@@ -139,24 +139,32 @@ assistant/
 
 ---
 
-## Available Tools (14)
+## Available Tools (22)
 
 | Tool | Description |
 |---|---|
 | `browser_agent` | Opens a real browser and completes tasks autonomously using LLM |
 | `tool_api_caller` | Makes HTTP requests to any API endpoint |
+| `tool_bash` | Runs bash commands on the local machine safely |
+| `tool_calendar` | Manages local calendar schedules (add, list, delete) |
 | `tool_coder` | Generates code files using the LLM |
 | `tool_data_converter` | Converts JSON arrays to Markdown tables and vice versa |
+| `tool_dnd` | Toggles Do Not Disturb alerts on Ubuntu (GNOME) desktops |
 | `tool_docmind` | Analyzes documents and answers questions about them |
 | `tool_downloader` | Downloads files from URLs to local disk |
-| `tool_email_sender` | Sends emails via SMTP |
+| `tool_email_sender` | Sends automated emails via SMTP credentials |
 | `file_converter` | **Universal converter** — images (JPG↔PNG↔WEBP↔BMP↔TIFF↔GIF), PDF→DOCX, DOCX→PDF, CSV↔JSON, MD→HTML |
 | `tool_file_manager` | Creates, reads, writes, and deletes files |
 | `tool_git_automator` | Automates git operations (add, commit, push) |
+| `tool_media_processor` | Resizes, crops, and modifies format types of media images |
+| `tool_note_taker` | Appends text journal logs categorized by today's date |
 | `tool_pdf_generator` | Converts HTML files to professional A4 PDFs |
 | `tool_report_writer` | Compiles Markdown into styled HTML reports with cover pages |
-| `tool_screenshot` | Captures screenshots of web pages |
+| `tool_screenshot` | Captures high-res visual coverage of target pages |
+| `tool_search` | Performs advanced web searches and outputs results |
 | `tool_sqlite_runner` | Runs SQL queries on SQLite databases |
+| `tool_sys_monitor` | Tracks internal processor allocations/RAM outputs or terminates instances |
+| `tool_task_manager` | Stores and modifies personal task lists securely |
 
 ---
 
